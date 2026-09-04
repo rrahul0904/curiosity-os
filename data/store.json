@@ -1,0 +1,17 @@
+{
+  "family": {"id":"fam_demo","parent":{"name":"Alex","email":"parent@example.test"}},
+  "child": {"id":"child_sam","name":"Sam","grade":3,"avatar":"🚀","stardust":145,"dailyQuestionLimit":60},
+  "stars": [
+    {"id":"star_volcano","title":"How volcanoes work","topic":"Earth Science","emoji":"🌋","mastery":92,"earnedAt":"2026-09-03T18:20:00.000Z","lastReviewedAt":"2026-09-03T18:20:00.000Z","nextReviewAt":"2026-09-08T18:20:00.000Z","reviews":2},
+    {"id":"star_butterfly","title":"Butterfly life cycle","topic":"Life Science","emoji":"🦋","mastery":78,"earnedAt":"2026-08-30T15:20:00.000Z","lastReviewedAt":"2026-08-30T15:20:00.000Z","nextReviewAt":"2026-09-04T15:20:00.000Z","reviews":1},
+    {"id":"star_fractions","title":"Fractions","topic":"Math","emoji":"➗","mastery":61,"earnedAt":"2026-08-22T12:00:00.000Z","lastReviewedAt":"2026-08-22T12:00:00.000Z","nextReviewAt":"2026-09-01T12:00:00.000Z","reviews":0}
+  ],
+  "questions": [
+    {"id":"q_seed1","text":"How do volcanoes work?","createdAt":"2026-09-03T18:15:00.000Z","status":"mastered","topic":"Earth Science"},
+    {"id":"q_seed2","text":"How does a caterpillar become a butterfly?","createdAt":"2026-09-02T20:15:00.000Z","status":"mastered","topic":"Life Science"}
+  ],
+  "pendingQuizzes": [],
+  "safetyEvents": [],
+  "rewards": [{"id":"reward_lego","title":"Build a new LEGO set together","cost":250,"createdAt":"2026-08-28T12:00:00.000Z","redeemed":false}],
+  "ledger": [{"id":"tx_seed","amount":145,"reason":"seed demo progress","createdAt":"2026-09-03T18:20:00.000Z"}]
+}

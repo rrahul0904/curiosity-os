@@ -1,0 +1,14 @@
+{
+  "name": "curiosity-os",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "CurioSky: safe curiosity-driven AI learning OS for children and families",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "test": "node --test",
+    "check": "node --check server.mjs && node --check src/ai.mjs && node --check src/knowledge.mjs && node --check src/safety.mjs && node --check src/store.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

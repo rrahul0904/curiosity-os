@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATA_PATH: /app/data/store.json
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./data:/app/data
