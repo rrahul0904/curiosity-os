@@ -6,12 +6,19 @@ import { JsonStore } from './src/store.mjs';
 import { classifySafety, safeRefusal } from './src/safety.mjs';
 import { findLesson, fallbackLesson, buildReviewQueue, freshnessForStar, nextReviewAt } from './src/knowledge.mjs';
 import { generateGatewayLesson } from './src/ai.mjs';
+import { createPlatformStore } from './src/platform-store.mjs';
+import { createV1Handler } from './src/v1-api.mjs';
 
 const root=fileURLToPath(new URL('.',import.meta.url));
 const publicDir=join(root,'public');
 const dataPath=process.env.DATA_PATH || join(root,'data','store.json');
 const store=new JsonStore(dataPath);
+const platform=await createPlatformStore({jsonStore:store});
 const port=Number(process.env.PORT||3000);
+
+const devSessionSecret='dev-only-curiosky-session-secret-change-me';
+const sessionSecret=process.env.SESSION_SECRET || devSessionSecret;
+if(process.env.NODE_ENV==='production' && sessionSecret===devSessionSecret) throw new Error('SESSION_SECRET is required in production');
 const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8'};
 
 function send(res,status,body,headers={}) {
@@ -20,9 +27,13 @@ function send(res,status,body,headers={}) {
 }
 async function bodyJson(req) {
   const chunks=[]; let size=0;
-  for await (const chunk of req) { size+=chunk.length; if(size>32000) throw new Error('request too large'); chunks.push(chunk); }
-  return chunks.length?JSON.parse(Buffer.concat(chunks).toString('utf8')):{};
+  for await (const chunk of req) { size+=chunk.length; if(size>32000) { const e=new Error('request too large');e.statusCode=413;throw e; } chunks.push(chunk); }
+  if(!chunks.length)return {};
+  try{return JSON.parse(Buffer.concat(chunks).toString('utf8'))}
+  catch{const e=new Error('invalid json');e.statusCode=400;throw e}
 }
+
+const handleV1=createV1Handler({platform,sessionSecret,send,bodyJson});
 function parentSummary(state) {
   return {recentQuestions:state.questions.slice(-8).reverse(),fading:buildReviewQueue(state.stars).slice(0,5),safetyCount:state.safetyEvents.length,starsCount:state.stars.length,stardust:state.child.stardust};
 }
@@ -109,7 +120,8 @@ async function staticFile(urlPath,res) {
 const server=createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,`http://${req.headers.host||'localhost'}`);
-    if(req.method==='GET'&&url.pathname==='/healthz')return send(res,200,{ok:true,service:'curiosity-os'});
+    if(req.method==='GET'&&url.pathname==='/healthz')return send(res,200,{ok:true,service:'curiosity-os',persistence:platform.kind});
+    if(await handleV1(req,res,url))return;
     if(req.method==='GET'&&url.pathname==='/api/bootstrap')return bootstrap(res);
     if(req.method==='POST'&&url.pathname==='/api/tutor')return tutor(req,res);
     if(req.method==='POST'&&url.pathname==='/api/quiz')return gradeQuiz(req,res);
@@ -117,6 +129,6 @@ const server=createServer(async(req,res)=>{
     if(req.method==='POST'&&url.pathname==='/api/rewards')return createReward(req,res);
     if(req.method==='GET'&&await staticFile(url.pathname,res))return;
     send(res,404,{error:'not found'});
-  }catch(error){console.error(error);send(res,500,{error:'internal error'});}
+  }catch(error){console.error(error);send(res,error.statusCode||500,{error:error.statusCode?error.message:'internal error'});}
 });
-server.listen(port,'0.0.0.0',()=>console.log(`CurioSky listening on http://localhost:${port}`));
+server.listen(port,'0.0.0.0',()=>console.log(`CurioSky listening on http://localhost:${port} (${platform.kind})`));

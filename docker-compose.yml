@@ -1,13 +1,36 @@
 services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: curiosky
+      POSTGRES_USER: curiosky
+      POSTGRES_PASSWORD: curiosky
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U curiosky -d curiosky"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - curiosity_pg:/var/lib/postgresql/data
+
   web:
     build: .
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "3000:3000"
     environment:
       PORT: 3000
       DATA_PATH: /app/data/store.json
+      DATABASE_URL: postgres://curiosky:curiosky@db:5432/curiosky
+      SESSION_SECRET: local-docker-curiosky-session-secret-change-me
     env_file:
       - path: .env
         required: false
+    command: ["sh", "-c", "node scripts/migrate.mjs && node server.mjs"]
     volumes:
       - ./data:/app/data
+
+volumes:
+  curiosity_pg:

@@ -9,57 +9,51 @@ CurioSky is an original, safe-by-design AI learning product for children and fam
 **Turn every moment of childhood curiosity into a persistent, evolving map of what the child understands.**
 
 ```text
-Ask → Safety Gate → Explain → Check Understanding → Earn Star
+Ask → Safety → Evidence → Explain → Check Understanding → Earn Star
     → Update Mastery → Schedule Review → Parent Insight
 ```
 
-## Initial implementation
+## Current status
 
-- Child curiosity home
-- Age/grade-aware lesson contract
-- Text + browser speech input
-- Safety pre-filter and parent-visible safety events
-- Curated offline lessons
-- Optional AI Gateway adapter
-- Quiz/remediation
-- Knowledge stars and constellations
-- Mastery/freshness + review scheduling
-- Stardust learning rewards
-- Parent dashboard + family rewards
-- Atomic local JSON persistence
-- Health/API endpoints
-- Node tests, Docker and GitHub Actions CI
+### Phase 0 — executable product foundation ✅
+Child Ask, My Sky, parent dashboard, quiz/remediation, stars/mastery/review, Stardust/rewards, demo API, tests, Docker and CI.
 
-## Run
+### Phase 1 — production data + identity foundation ✅
+PostgreSQL migrations/adapter, parent registration/login, scrypt credential hashing, signed parent/child sessions, versioned parental consent, child handles/PIN login, family/role authorization, audit/safety persistence.
+
+### Phase 2 — evidence intelligence foundation ✅
+Evidence-first tutor orchestration, trusted-source allowlist, USGS/NASA evidence examples, optional evidence-search adapter, model generation only with sufficient evidence, safe uncertainty fallback, model/cost/latency/evidence traces.
+
+See `docs/PHASE_1_2_IMPLEMENTATION.md`.
+
+## Zero-config run
 
 Requires Node.js 22+.
 
 ```bash
 node server.mjs
-# open http://localhost:3000
 ```
 
-No package installation is required for the baseline.
+Open http://localhost:3000.
 
-## Test
+## Full PostgreSQL stack
 
 ```bash
+docker compose up --build
+```
+
+The container applies migrations before starting the app.
+
+## Direct development
+
+```bash
+npm install
 npm test
 npm run check
+npm run db:migrate   # DATABASE_URL required
+npm start
 ```
 
-## Optional live AI
+## Next phase
 
-The curated demo works without an AI key. For open-ended tutor generation, configure `AI_GATEWAY_API_KEY` and `AI_GATEWAY_MODEL`. Unknown questions fail safely when no model is configured rather than fabricating facts.
-
-## Repository map
-
-```text
-public/   child + parent web experience
-src/      safety, AI, knowledge and persistence domain logic
-data/     prototype datastore
-tests/    unit + HTTP integration tests
-docs/     PRD, architecture, implementation, security, data and cost plans
-```
-
-Start with `docs/PROJECT_PLAN.md` and `docs/IMPLEMENTATION_PLAN.md`.
+Phase 3/4 turns this foundation into the durable learner control plane: **dedicated safety control plane + concept graph + immutable mastery events + persisted production assessments + adaptive review + misconception intelligence + parent insights.**

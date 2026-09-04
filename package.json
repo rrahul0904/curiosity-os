@@ -1,6 +1,6 @@
 {
   "name": "curiosity-os",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
   "description": "CurioSky: safe curiosity-driven AI learning OS for children and families",
@@ -8,7 +8,11 @@
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
     "test": "node --test",
-    "check": "node --check server.mjs && node --check src/ai.mjs && node --check src/knowledge.mjs && node --check src/safety.mjs && node --check src/store.mjs"
+    "check": "node --check server.mjs && node --check src/ai.mjs && node --check src/auth.mjs && node --check src/authorization.mjs && node --check src/evidence.mjs && node --check src/knowledge.mjs && node --check src/platform-store.mjs && node --check src/db/postgres.mjs && node --check src/tutor-orchestrator.mjs && node --check src/v1-api.mjs && node --check src/safety.mjs && node --check src/store.mjs",
+    "db:migrate": "node scripts/migrate.mjs"
+  },
+  "dependencies": {
+    "pg": "8.23.0"
   },
   "engines": { "node": ">=22" }
 }
