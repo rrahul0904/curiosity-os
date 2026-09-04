@@ -11,11 +11,30 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: curiosity_ci
+          POSTGRES_USER: curiosity
+          POSTGRES_PASSWORD: curiosity
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U curiosity -d curiosity_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgresql://curiosity:curiosity@127.0.0.1:5432/curiosity_ci
+      TEST_DATABASE_URL: postgresql://curiosity:curiosity@127.0.0.1:5432/curiosity_ci
+      SESSION_SECRET: ci-curiosky-session-secret-0123456789abcdef
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install --ignore-scripts
+      - run: npm run db:migrate
       - run: npm test
       - run: npm run check
