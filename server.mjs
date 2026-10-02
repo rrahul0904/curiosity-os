@@ -8,6 +8,7 @@ import { findLesson, fallbackLesson, buildReviewQueue, freshnessForStar, nextRev
 import { generateGatewayLesson } from './src/ai.mjs';
 import { createPlatformStore } from './src/platform-store.mjs';
 import { createV1Handler } from './src/v1-api.mjs';
+import { createAtlasHandler } from './src/atlas.mjs';
 
 const root=fileURLToPath(new URL('.',import.meta.url));
 const publicDir=join(root,'public');
@@ -33,6 +34,7 @@ async function bodyJson(req) {
   catch{const e=new Error('invalid json');e.statusCode=400;throw e}
 }
 
+const handleAtlas=createAtlasHandler({send,bodyJson});
 const handleV1=createV1Handler({platform,sessionSecret,send,bodyJson});
 function parentSummary(state) {
   return {recentQuestions:state.questions.slice(-8).reverse(),fading:buildReviewQueue(state.stars).slice(0,5),safetyCount:state.safetyEvents.length,starsCount:state.stars.length,stardust:state.child.stardust};
@@ -121,6 +123,7 @@ const server=createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,`http://${req.headers.host||'localhost'}`);
     if(req.method==='GET'&&url.pathname==='/healthz')return send(res,200,{ok:true,service:'curiosity-os',persistence:platform.kind});
+    if(await handleAtlas(req,res,url))return;
     if(await handleV1(req,res,url))return;
     if(req.method==='GET'&&url.pathname==='/api/bootstrap')return bootstrap(res);
     if(req.method==='POST'&&url.pathname==='/api/tutor')return tutor(req,res);

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050914">
+  <title>Curiosity Atlas — CurioSky</title>
+  <link rel="stylesheet" href="/atlas.css">
+</head>
+<body>
+  <header class="atlas-topbar">
+    <a class="brand" href="/">✦ CurioSky</a>
+    <div>
+      <span class="kicker">CURIOSTY ATLAS</span>
+      <strong>See how ideas connect — and why.</strong>
+    </div>
+  </header>
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Evidence-aware exploration</p>
+        <h1>Turn a question into a map of related ideas.</h1>
+        <p class="lede">Curiosity Atlas uses bounded Wikipedia links and shared categories. Every visible connection carries an explanation instead of being an unexplained line.</p>
+      </div>
+      <form id="atlas-form" class="controls">
+        <label>
+          Start with a Wikipedia topic
+          <input id="seed" name="seed" value="Volcano" maxlength="180" autocomplete="off" required>
+        </label>
+        <div class="control-row">
+          <label>Depth
+            <select id="depth" name="depth"><option value="1" selected>1 hop</option><option value="2">2 hops</option></select>
+          </label>
+          <label>Max concepts
+            <select id="nodes" name="nodes"><option value="8">8</option><option value="14" selected>14</option><option value="20">20</option></select>
+          </label>
+        </div>
+        <button id="explore" type="submit">Explore connections →</button>
+      </form>
+    </section>
+
+    <section class="workspace" aria-label="Curiosity Atlas workspace">
+      <article class="graph-card">
+        <div class="card-head">
+          <div><span class="eyebrow">Live graph</span><h2 id="graph-title">Ready to explore</h2></div>
+          <div id="graph-meta" class="meta">No graph loaded.</div>
+        </div>
+        <div id="status" class="status" role="status" aria-live="polite">Choose a topic above.</div>
+        <svg id="graph" viewBox="0 0 900 620" role="img" aria-labelledby="graph-title"></svg>
+      </article>
+      <aside class="detail-card" id="detail" aria-live="polite">
+        <span class="eyebrow">Connection inspector</span>
+        <h2>Why are these connected?</h2>
+        <p>Select a concept in the graph to inspect the evidence behind its connections.</p>
+      </aside>
+    </section>
+
+    <section class="truth-card">
+      <div><span class="eyebrow">Evidence contract</span><h2>What the lines mean</h2></div>
+      <p>A line means the source Wikipedia article directly links to the target. Shared categories strengthen the explanation. Section placement and clickstream counts appear only when a verified enrichment source is configured; this first slice never invents them.</p>
+    </section>
+  </main>
+  <script type="module" src="/atlas.js"></script>
+</body>
+</html>
