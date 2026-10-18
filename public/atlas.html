@@ -46,7 +46,13 @@
           <div id="graph-meta" class="meta">No graph loaded.</div>
         </div>
         <div id="status" class="status" role="status" aria-live="polite">Choose a topic above.</div>
-        <svg id="graph" viewBox="0 0 900 620" role="img" aria-labelledby="graph-title"></svg>
+        <div class="viewport-tools" role="group" aria-label="Knowledge map navigation">
+          <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+          <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+          <button type="button" id="zoom-reset">Reset view</button>
+          <span>Drag empty space to pan · Ctrl/⌘ + scroll to zoom · Focus map for arrow keys, +/−, Home</span>
+        </div>
+        <svg id="graph" viewBox="0 0 900 620" tabindex="0" role="group" aria-label="Interactive knowledge graph: drag empty space to pan; use arrows to pan; plus and minus to zoom; Home to reset. Tab to inspect concept nodes."></svg>
       </article>
       <aside class="detail-card" id="detail" aria-live="polite">
         <span class="eyebrow">Connection inspector</span>

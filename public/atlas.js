@@ -1,3 +1,4 @@
+import { attachAtlasViewport } from './atlas-viewport.js';
 const form = document.querySelector('#atlas-form');
 const graph = document.querySelector('#graph');
 const status = document.querySelector('#status');
@@ -7,6 +8,10 @@ const meta = document.querySelector('#graph-meta');
 const button = document.querySelector('#explore');
 const NS = 'http://www.w3.org/2000/svg';
 let current = null;
+const viewport = attachAtlasViewport(graph);
+document.querySelector('#zoom-in').addEventListener('click', () => viewport.zoomIn());
+document.querySelector('#zoom-out').addEventListener('click', () => viewport.zoomOut());
+document.querySelector('#zoom-reset').addEventListener('click', () => { viewport.reset(); graph.focus(); });
 
 function svg(tag, attrs = {}) {
   const element = document.createElementNS(NS, tag);
@@ -100,6 +105,7 @@ function inspect(node) {
 
 function render(data) {
   current = data;
+  viewport.reset();
   clear(graph);
   const locations = positions(data.nodes);
   title.textContent = `${data.seed} knowledge neighborhood`;
